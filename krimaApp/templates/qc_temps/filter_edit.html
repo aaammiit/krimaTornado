@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KrimaSolutions-QC Edit Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        /* Styling for body and main content */
+        body {
+            padding-top: 70px;
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        /* Navbar styling */
+        .navbar {
+            background-color: #333;
+            border-bottom: 2px solid #444;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff !important;
+        }
+
+        .nav-link {
+            color: #ddd !important;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #fff !important;
+        }
+
+        .navbar .nav-item button {
+            color: #ddd;
+            font-size: 1rem;
+            border: none;
+            background-color: transparent;
+            transition: color 0.3s ease;
+            margin-left:5px;
+        }
+
+        .navbar .nav-item button:hover {
+            color: #49d889;
+        }
+
+        /* Form styling */
+        .form-label {
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        .form-select,
+        .form-control {
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+        }
+
+        /* Search highlight */
+        .highlight {
+            background-color: #eef43b;
+        }
+
+        /* Shadow and rounded corners for main form container */
+        .main-container {
+            background-color: #fff;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 1rem;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        /* Save button styling */
+        .btn-outline-success, .btn-outline-primary {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #49d889;
+            color: #fff;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #3498db;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="/static/image/logo.png" alt="Logo" width="270" height="50">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <button onclick="showSearch()" id="btn2">Search Bar</button>
+                    </li>
+                    <li class="nav-item">
+                        <button onclick="hideSearch()" id="btn1" hidden>Hide Search</button>
+                    </li>
+                    <li class="nav-item">
+                            <input type="text" name="" id="srh"
+                                style="width: 230px;color: rgb(16, 15, 15);background-color: rgb(177, 166, 151);" hidden
+                                oninput="search()">
+                    </li>
+                    <li class="nav-item">
+                        <button onclick="Rchar()">Remove Special-Char</button>
+                    </li>
+                </ul>
+                <span class="navbar-text text-light">
+                    <strong>User:</strong> <b>{{user}}</b>
+                </span>
+            </div>
+        </div>
+    </nav>
+    <div class="shadow-lg  mb-5 bg-white rounded">
+        <div class="container float-start" id="div1">
+            <div class="d-flex p-2 bd-highlight">
+                <form class="row g-3" method="post" action="" style="width: 500px;">
+                    {% csrf_token %}
+                
+                    <!-- Row 1 -->
+                    <div class="col-md-6">
+                        <label for="sr_no" class="form-label" style="color: rgb(209, 83, 15); font-weight: 700;">sr_no</label>
+                        <textarea name="a1" id="sr_no" cols="28" style="color: #0c0c0a;">{{ sr_no }}</textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="date" class="form-label" style="color: rgb(209, 83, 15); font-weight: 700;">Date</label>
+                        <textarea name="a2" id="date" cols="28">{{ Date }}</textarea>
+                    </div>
+                
+                    <!-- Row 2 -->
+                    <div class="col-6">
+                        <label for="regulatory" class="form-label" style="color: rgb(209, 83, 15); font-weight: 700;">Regulatory</label>
+                        <textarea name="a3" id="regulatory" cols="28">{{ Regulatory }}</textarea>
+                    </div>
+                    <div class="col-6">
+                        <label for="krima_status" class="form-label" style="color: black; font-weight: 700;">KRIMA_status</label>
+                        <select id="krima_status" class="form-select" name="a7" style="width: 240px; height: 55px;">
+                            <option value="{{ KRIMA_status }}">{{ KRIMA_status }}</option>
+                            <option value="Done">Done</option>
+                            <option value="For QC Head">For QC Head</option>
+                            <option value="For PM Head">For PM Head</option>
+                            <option value="For Client">For Client</option>
+                            <option value="Row Added">Row Added</option>
+                            <option value="Page Not Found/Error">Page Not Found/Error</option>
+                            <option value="Duplicate">Duplicate</option>
+                            <option value="Language Issue">Language Issue</option>
+                        </select>
+                    </div>
+                
+                    <!-- Row 3 -->
+                    <div class="col-12">
+                        <label for="title" class="form-label" style="color: rgb(209, 83, 15); font-weight: 700;">Title</label>
+                        <textarea name="a4" id="title" cols="60">{{ Title }}</textarea>
+                    </div>
+                
+                    <!-- URL Link -->
+                    <div class="col-md-12">
+                        <label for="url" class="form-label" style="color: rgb(209, 83, 15); font-weight: 700;">URL</label>
+                        <a href="{{ URL }}" target="_blank">{{ URL }}</a>
+                    </div>
+                
+                    <!-- Dropdowns for KRIMA fields -->
+                    <div class="col-6">
+                        <label for="krima_true_false" class="form-label" style="color: black; font-weight: 700;">KRIMA_true_false</label>
+                        <select id="krima_true_false" class="form-select" name="a8" style="width: 230px; height: 55px;">
+                            <option value="{{ KRIMA_true_false }}">{{ KRIMA_true_false }}</option>
+                            <option value="TRUE">TRUE</option>
+                            <option value="NOT TRUE">NOT TRUE</option>
+                        </select>
+                    </div>
+                
+                    <div class="col-6">
+                        <label for="krima_type" class="form-label" style="color: black; font-weight: 700;">KRIMA_type</label>
+                        <select id="krima_type" class="form-select" name="a9" style="width: 235px; height: 55px;">
+                            <option value="{{ KRIMA_type }}">{{ KRIMA_type }}</option>
+                            <option value="Consultation">Consultation</option>
+                            <option value="General Notice">General Notice</option>
+                            <option value="Penalty Notice">Penalty Notice</option>
+                            <option value="Regulation Change">Regulation Change</option>
+                            <option value="Regulatory Guidance">Regulatory Guidance</option>
+                            <option value="Sanctions">Sanctions</option>
+                            <option value="Awards">Awards</option>
+                            <option value="Disciplinary Proceedings">Disciplinary Proceedings</option>
+                            <option value="Speeches">Speeches</option>
+                            <option value="Infringements or Investigations">Infringements or Investigations</option>
+                            <option value="Insolvency Notice">Insolvency Notices</option>
+                            <option value="Whistle Blowing">Whistle Blowing</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="gpt_person_or_business" class="form-label" style="color: black; font-weight: 700;">gpt_person_or_business</label>
+                        <textarea name="a11" id="gpt_person_or_business" cols="60">{{ KRIMA_edited_gpt_person_or_business }}</textarea>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="inputAddress" class="form-label"
+                            style="color: black;font-weight: 700;">KRIMA_edited_gpt_company_check</label>
+                        <textarea name="a12" id="" cols="60">{{KRIMA_edited_gpt_company_check}}</textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="inputAddress" class="form-label"
+                            style="color: black;font-weight: 700;">gpt_area_of_activity_or_service</label>
+                        <textarea name="a23" id="" cols="60">{{gpt_area_of_activity_or_service}}</textarea>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="inputAddress" class="form-label"
+                            style="color: black;font-weight: 700;">gpt_area_of_regulation</label>
+                        <textarea name="a24" id="" cols="60">{{gpt_area_of_regulation}}</textarea>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="inputAddress" class="form-label"
+                            style="color: black;font-weight: 700;">KRIMA_area_of_activity_or_service</label>
+                        <textarea name="a25" id="" cols="60">{{KRIMA_area_of_activity_or_service}}</textarea>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="inputAddress" class="form-label"
+                            style="color: black;font-weight: 700;">KRIMA_area_of_regulation</label>
+                        <textarea name="a26" id="" cols="60">{{KRIMA_area_of_regulation}}</textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="inputEmail4" class="form-label"
+                            style="color: black;font-weight: 700;">parent_company_name</label>
+                        <textarea name="a13" id="" cols="60">{{parent_company_name}}</textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="inputPassword4" class="form-label"
+                            style="color: black;font-weight: 700;">KRIMA_civil_penalty_validated</label>
+                        <textarea name="a14" id="" cols="60">{{KRIMA_civil_penalty_validated}}</textarea>
+
+                    </div>
+
+                    <div class="col-6">
+                        <label for="inputAddress" class="form-label"
+                            style="color: black;font-weight: 700;">civil_penalty_cleansed</label>
+                        <textarea name="a15" id="" cols="28">{{KRIMA_civil_penalty_cleansed}}</textarea>
+                    </div>
+
+                    <div class="col-6">
+                        <label for="inputAddress" class="form-label"
+                            style="color: black;font-weight: 700;">KRIMA_currency</label>
+                        <textarea name="a16" id="" cols="28">{{KRIMA_currency}}</textarea>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="inputEmail4" class="form-label"
+                            style="color: black;font-weight: 700;">KRIMA_civil_penalty_usd</label>
+                        <textarea name="a17" id="" cols="28">{{KRIMA_civil_penalty_usd}}</textarea>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="inputEmail4" class="form-label"
+                            style="color: black;font-weight: 700;">disgorgement_restitution_usd</label>
+                        <textarea name="a18" id="" cols="28">{{KRIMA_disgorgement_restitution_usd}}</textarea>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="inputPassword4" class="form-label"
+                            style="color: black;font-weight: 700;">KRIMA_imposed_penalty</label>
+                        <textarea name="a19" id="" cols="28">{{KRIMA_imposed_penalty}}</textarea>
+
+                    </div>
+
+                    <div class="col-6">
+                        <label for="inputAddress" class="form-label"
+                            style="color: black;font-weight: 700;">KRIMA_settled_value</label>
+                        <textarea name="a20" id="" cols="28">{{KRIMA_settled_value}}</textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="inputAddress" class="form-label"
+                            style="color: black;font-weight: 700;">KRIMA_non_monetary_penalty</label>
+                            <select  class="form-select" name="a21" style="width: 490px; height: 55px;">
+                                <option value="{{ KRIMA_non_monetary_penalty }}">{{ KRIMA_non_monetary_penalty }}</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                    </div>
+                    <div class="col-md-7">
+                        <label for="inputPassword4" class="form-label"
+                            style="color: black;font-weight: 700;">KRIMA_notes</label>
+                        <textarea name="a10" id="" cols="28">{{KRIMA_notes}}</textarea>
+
+                    </div>
+                    <div class="col-5">
+                        <label for="inputAddress" class="form-label" style="color: black;font-weight: 700;">Mark
+                            Done</label>
+                        <select id="inputState" class="form-select" name="a22" style="width: 200px;height:55px;"
+                            required>
+                            <option value="{{Ok}}" selected>Choose...</option>
+                            <option value="1">Done</option>
+                            <!-- <option value="2">Reject</option> -->
+                            <option value="0">Doubts/Error</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-outline-success">Save Data</button>
+                        <a href="/filter_Add_rows/{{id}}/{{pid}}" class="btn btn-outline-primary mx-4">Add Rows</a>
+
+                    </div>
+            </div>
+        </div>
+        </form>
+        
+        <div class="fixed-top" style="height: 100px;margin-top:85px;margin-left:600px;">
+            <p name="a5"  cols="85" rows="60"
+                style="text-align:center;color: rgb(9, 9, 9);font-size:15px ;font-weight: 750;height:520px;width: 700px;margin-left: 12px;overflow-x: scroll;">
+                <span style="font-size: 20px; color:rgb(247, 10, 6);">GPT Summary</span>
+                <span style="display: block; " id="gpt">{{gpt}}</span>
+                <span style="display: block; ">____________________________________________________________________________________________</span>
+                <span style="font-size: 20px; color: rgb(247, 10, 6);">Article</span>
+                <span style="display: block;" id="art">{{Article}}</span>
+            
+            </p>
+        </div>
+    </div>
+
+    </div>
+    </div>
+
+    <script>
+
+        
+let p = document.getElementById('art');
+        let p1 = document.getElementById('gpt');
+
+
+        function search() {
+            let input = document.getElementById('srh').value;
+            if (input !== "") {
+                let regexp = new RegExp(input, "gi");
+                p.innerHTML = (p.textContent).replace(regexp, '<mark class="highlight">$&</mark>');
+                p1.innerHTML = (p1.textContent).replace(regexp, '<mark class="highlight">$&</mark>');
+            } else {
+                p.innerHTML = p.textContent; // reset the text when input is empty
+                p1.innerHTML = p1.textContent;
+            }
+        }
+
+        function Rchar() {
+            let p = document.getElementById('art');
+            let p1 = document.getElementById('gpt');
+
+            p.innerText = p.innerText.replace(/<[^>]*>|[^a-zA-Z0-9,;\-.!?<> ]/g, ' ');
+            p.innerText = p.innerText.replace(/(?:\r\n|\r|\n)/g, ' ');
+            p1.innerText = p1.innerText.replace(/<[^>]*>|[^a-zA-Z0-9,;\-.!?<> ]/g, ' ');
+            p1.innerText = p1.innerText.replace(/(?:\r\n|\r|\n)/g, ' ');
+        }
+
+        function showSearch() {
+            document.getElementById("srh").hidden = false;
+            document.getElementById("btn1").hidden = false;
+            document.getElementById("btn2").hidden = true;
+
+        }
+
+        function hideSearch() {
+            document.getElementById("srh").hidden = true;
+            document.getElementById("btn1").hidden = true;
+            document.getElementById("btn2").hidden = false;
+
+        }
+
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KrimaSolutions-File Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            padding-top: 70px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+           
+
+        }
+
+        .navbar {
+            background-color: #333;
+            border-bottom: 1px solid #444;
+        }
+
+        .myc {
+            margin-top: 0px;
+           
+           
+        }
+
+        .table-responsive-lg {
+            overflow-x: auto;
+            max-height: 90vh; /* Adjust as needed */
+        }
+
+        .table {
+            border-collapse: separate;
+            border-spacing: 0 5px;
+            width: max-content;
+            min-width: 100%;
+        }
+
+        /* Style to make header sticky */
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background-color: #b38528 !important;
+        }
+
+        th, td {
+            text-align: center;
+            font-size: 13px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="/static/image/logo.png" alt="Logo" width="270" height="50">
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/dashboard"
+                        style="font-size: 16px;">Home</a>
+                </li>
+                <li class="nav-item" style="margin-left: 120px;">
+                    <a class="nav-link active text-primary" aria-current="page" href="#"
+                        style="font-size: 17px;"><span class="text-light">Records - </span>{{data|length}}</a>
+                </li>
+                <li class="nav-item" style="margin-left: 30px;">
+                    <a class="nav-link active text-primary" aria-current="page" href="#"
+                        style="font-size: 17px;"><span class="text-light">From - </span>{{f}}</a>
+                </li>
+                <li class="nav-item" style="margin-left: 30px;">
+                    <a class="nav-link active text-primary" aria-current="page" href="#"
+                        style="font-size: 17px;"><span class="text-light">To - </span>{{t}}</a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="myc">
+    <div class="row">
+        <div class="table-responsive-lg">
+            <table class="table table-hover text-center caption-top">
+                <thead>
+                    <tr>
+                        <th class="text-dark">KRIMA_collated_sr_no</th>
+                        <th class="text-dark">Sr-NO</th>
+                        <th class="text-dark">Article</th>
+                        <th class="text-dark">Date</th>
+                        <th class="text-dark">Regulatory</th>
+                        <th class="text-dark">Title</th>
+                        <th class="text-dark">URL</th>
+                        <th class="text-dark">KRIMA STATUS</th>
+                        <th class="text-dark">KRIMA TRUE/NOT TRUE</th>
+                        <th class="text-dark">KRIMA TYPE</th>
+                        <th class="text-dark">KRIMA DOUBTS/NOTES</th>
+                        <th class="text-dark">GPT Perseon/Business</th>
+                        <th class="text-dark">GPT CompanyCheck</th>
+
+                        <th class="text-dark">gpt_area_of_activity_or_service</th>
+                        <th class="text-dark">gpt_area_of_regulation</th>
+                        <th class="text-dark">KRIMA_area_of_activity_or_service</th>
+                        <th class="text-dark">KRIMA_area_of_regulation</th>
+
+                        <th class="text-dark">Parent Comapny Name</th>
+                        <th class="text-dark">Civil Penalty Validate</th>
+                        <th class="text-dark">Civil Penalty Cleaned</th>
+                        <th class="text-dark">Currency</th>
+                        <th class="text-dark">Civil Penalty USD-JD</th>
+                        <th class="text-dark">Disgorgement/Resitution(USD)</th>
+                        <th class="text-dark">Total Imposed Penalty</th>
+                        <th class="text-dark">Settled value</th>
+                        <th class="text-dark">Non-Monetary Penalty</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in data %}
+                    <tr>
+                        <td style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_collated_sr_no}}</td>
+                        <td style="font-weight: 700;" class="text-center text-dark" readonly>{{i.sr_no}}</td>
+                        <td><textarea name="" id="" cols="40" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.Article}}</textarea></td>
+                        <td style="font-weight: 700;" class="text-center text-dark" readonly>{{i.Date}}</td>
+                        <td style="font-weight: 700;" class="text-center text-dark" readonly>{{i.Regulatory}}</td>
+                        <td><textarea name="" id="" cols="30" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.Title}}</textarea></td>
+                        <td><textarea name="" id="" cols="30" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.URL}}</textarea></td>
+                        <td style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_status}}</td>
+                        <td style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_true_false}}</td>
+                        <td style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_type}}</td>
+                        <td ><textarea name="" id="" cols="30" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_notes}}</textarea></td>
+                        <td style="font-weight: 700;"class="text-center text-dark" readonly>{{i.KRIMA_edited_gpt_person_or_business}}</td>
+                        <td><textarea name="" id="" cols="30" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_edited_gpt_company_check}}</textarea></td>
+
+                        <td ><textarea name="" id="" cols="30" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.gpt_area_of_activity_or_service}}</textarea></td>
+                        <td ><textarea name="" id="" cols="30" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.gpt_area_of_regulation}}</textarea></td>
+                        <td ><textarea name="" id="" cols="30" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_area_of_activity_or_service}}</textarea></td>
+                        <td ><textarea name="" id="" cols="30" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_area_of_regulation}}</textarea></td>
+
+                        <td><textarea name="" id="" cols="30" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.parent_company_name}}</textarea></td>
+                        <td ><textarea name="" id="" cols="30" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_civil_penalty_validated}}</textarea></td>
+                        <td style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_civil_penalty_cleansed}}</td>
+                        <td style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_currency}}</td>
+                        <td ><textarea name="" id="" cols="20" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_civil_penalty_usd}}</textarea></td>
+                        <td ><textarea name="" cols="30" id="" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_disgorgement_restitution_usd}}</textarea></td>
+                        <td style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_imposed_penalty}}</td>
+                        <td style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_settled_value}}</td>
+                        <td ><textarea name="" id="" cols="30" style="font-weight: 700;" class="text-center text-dark" readonly>{{i.KRIMA_non_monetary_penalty}}</textarea></td>
+
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        

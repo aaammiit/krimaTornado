@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KrimaSolutions-Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 14px;
+
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            color: #333;
+        }
+
+        tr:hover {
+            background-color: #ccc;
+        }
+
+        .a_back {
+            text-decoration: none;
+            color: #c9cc00;
+            font-size: 18px;
+            background-color: rgb(125, 114, 114);
+            padding-left: 4px;
+            padding-right: 4px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            float: right;
+            margin-right: 5px;
+        }
+
+        .a_back:hover {
+            color: #0099cc;
+            background-color: #ccc;
+        }
+
+        .table-fixed {
+            table-layout: fixed;
+        }
+
+        .table-fixed th,
+        .table-fixed td {
+            width: 150px;
+            /* adjust the width to fit your needs */
+            height: 40px;
+            /* adjust the height to fit your needs */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .table-fixed th {
+            background-color: #f0f0f0;
+        }
+
+        .table-fixed td {
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="/static/image/logo.png" alt="Logo" width="270" height="50">
+
+            </a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+
+                    {% load utils %}
+
+                    {% with request.path|split_path as path_parts %}
+                    {% with path_parts|last as file_id %}
+                    {% if request.path|startswith:'/work_repo/' and file_id|isdigit %}
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/qc_file_record"
+                            style="font-size: 19px;">Report</a>
+                    </li>
+                    {%else%}
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/dashboard"
+                            style="font-size: 19px;">Home</a>
+                    </li>
+                    <li class="nav-item" style="margin-left: 500px;">
+                        <p class="text-light fs-6 nav-link active "><strong class="text-light">User - </strong> <b>{{user}}</b></p>
+
+                    </li>
+                    {% endif %}
+
+                    {% endwith %}
+                    {% endwith %}
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <h2 style="color: #00698f; font-size: 20px;text-align: center;text-decoration: underline;">Records Report</h2>
+{%if combined_list%}
+    <div class="container">
+
+        {% for key, group in combined_list|group_by:"my_file" %}
+        <h3 style="color: #0099cc; font-size: 18px;font-weight: 600;">{{ key }} ({{ group|length }} Files)</h3>
+
+        <table class="d-flex table-fixed">
+            <tr>
+                <th>Qc User</th>
+                <th>Send File Date</th>
+                <th>File Name</th>
+                <th>Records</th>
+                <th>From Date</th>
+                <th>To Date</th>
+                <th colspan="3" class="text-center">Work Status</th>
+                
+            </tr>
+            {% for item in group %}
+            <tr>
+                <td>{{ item.0.user }}</td>
+                <td>{{ item.0.date }}</td>
+                <td>{{ item.0.qc_file }}</td>
+                <td>{{ item.0.end }}</td>
+                <td>{{ item.0.from_date }}</td>
+                <td>{{ item.0.to_date }}</td>
+                <td class="text-center d-flex" style="width:220px;">
+                    <p class="bg-secondary" style="width: 55px;height: 25px;">
+                        <b class=" text-light rounded-pill py-2 ">{{ item.1.unclassified }}</b>
+                    </p>
+                    
+                    <p class="bg-success" style="width: 55px;height: 25px;">
+
+                        <b class="text-light  rounded-pill  py-2 px-2">{{ item.1.correct }}</b>
+                    </p>
+                
+                    <p class="bg-warning" style="width: 55px;height: 25px;">
+
+                        <b class=" text-light rounded-pill  py-2 px-2">{{ item.1.error }}</b>
+                    </p>
+                    
+                    <p class="bg-danger" style="width: 45px;height: 25px;">
+
+                        <b class=" text-light rounded-pill  py-2 px-2">{{ item.1.rejected }}</b>
+                    </p>
+            
+                </td>
+                
+            </tr>
+            {% endfor %}
+        </table>
+        {% endfor %}
+    </div>
+    {%else%}
+    <div class="container text-center" style="margin-top: 40px;margin-bottom: 50px;">
+
+        <div class="spinner-border m-5" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <h3>No Files Uploaded as Yet</h3>
+        <p>Upload Files To Start Work</p>
+
+    </div>
+    
+    {%endif%}
+
+</body>
+
+</html>

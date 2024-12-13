@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KrimaSolutions - Admin Dashboard</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        /* General layout styling */
+        body {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #333;
+            padding: 1rem;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand img {
+            margin-right: 10px;
+        }
+
+        .navbar-nav .nav-link {
+            color: #ddd !important;
+        }
+
+        .navbar-nav .dropdown-menu {
+            background-color: #444;
+        }
+
+        .navbar-nav .dropdown-item:hover {
+            background-color: #555;
+            color: #fff;
+        }
+
+        /* Adjusting the user profile display in the navbar */
+        .user-profile {
+            margin-left: auto;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #ddd;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-profile strong {
+            color: #fff;
+        }
+
+        /* Table styles */
+        .table th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .table td {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Form styling */
+        .form-control {
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            padding: 0.5rem;
+        }
+
+        .btn-success {
+            font-size: 1rem;
+        }
+
+        /* Spinner and message alignment */
+        .spinner-border {
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="/static/image/logo.png" alt="Logo" width="270" height="50">
+                <!-- KrimaSolutions -->
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Profiles
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="/make_qc">Create QC Profile</a></li>
+                            <li><a class="dropdown-item" href="/make_ed">Create Editor Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a href="/logout_user" class="dropdown-item text-danger">Logout - {{ user }}</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="reportsDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Reports And Users
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="reportsDropdown">
+                            <li><a class="dropdown-item" href="/qc_file_record">Sent Files Status</a></li>
+                            <li><a class="dropdown-item" href="/ed_file_record">Received Files Status</a></li>
+                            <li><a class="dropdown-item" href="/all_user">Users List</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="user-profile">
+                    <p class="nav-link mb-0">User - <strong>{{ user }}</strong></p>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <!-- Alert messages (success/error) -->
+        {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                    <use xlink:href="#exclamation-triangle-fill" />
+                </svg>
+                <div>{{ message }}</div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="alert alert-success d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
+                    <use xlink:href="#check-circle-fill" />
+                </svg>
+                <div>{{ message }}</div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="container">
+        <h2 class="text-center text-dark" style="font-weight: 700;">
+            Admin Dashboard
+        </h2>
+
+        {% if data %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">File Name</th>
+                    <th scope="col">File Upload Date</th>
+                    <th scope="col">Records</th>
+                    <th scope="col">From Date</th>
+                    <th scope="col">To Date</th>
+                    <th scope="col">Actions</th>
+
+                </tr>
+            </thead>
+            {% for i in data %}
+            <tbody>
+                <tr>
+                    <td style="font-size:16px;font-weight: 500;color:brown;">
+                        <abbr title="{{ i.file }}" style="text-decoration: none;">{{ i.file|truncatechars:20 }}</abbr>
+                    </td>
+                    <td style="font-size: 16px;font-weight: 500;color:rgb(12, 16, 231);">{{ i.date }}</td>
+                    <td style="font-size: 16px;font-weight: 500;color:rgb(12, 16, 231);">{{ i.count }}</td>
+                    <td style="font-size: 16px;font-weight: 500;color:rgb(11, 3, 3);">{{ i.from_date }}</td>
+                    <td style="font-size: 16px;font-weight: 500;color:rgb(11, 3, 3);">{{ i.to_date }}</td>
+                    <td>
+
+                        {%if i.status %}
+                        {%if i.count == 0 %}
+                        <a href="#" class="btn btn-warning">view</a>
+                        <a href="#" class="btn btn-primary" type="submit" style="width: 100px;">Push <svg
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-check-square-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z" />
+                        </svg></a>
+                        {%else%}
+                        <a href="view_file/{{i.id}}" class="btn btn-warning">view</a>
+                        <a href="push/{{i.id}}" class="btn btn-primary" type="submit" style="width: 100px;">Push <svg
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-check-square-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z" />
+                            </svg></a>
+                        {%endif%}
+                        <a href="#" class="btn btn-danger">Delete</a>
+
+                        {%else%}
+                        {% if qc%}
+                        <a href="view_file/{{i.id}}" class="btn btn-warning">view</a>
+                        <a href="push/{{i.id}}" class="btn btn-primary" type="submit" style="width: 100px;">Push</a>
+                        <a href="delete_file/{{i.id}}" class="btn btn-danger">Delete</a>
+                        {%else%}
+                        <a href="view_file/{{i.id}}" class="btn btn-warning">view</a>
+                        <!-- <a href="" class="btn btn-outline-primary " type="submit" >Push</a> -->
+                        <button type="button" class="btn btn-primary" style="width: 100px;" data-bs-container="body"
+                        data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Not Any QC Here">
+                        Push
+                    </button>
+                    <a href="delete_file/{{i.id}}" class="btn btn-danger">Delete</a>
+
+                    </td>
+                    {%endif%}
+
+                    {%endif%}
+
+                    </td>
+
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+        {%else%}
+        <div class="container text-center" style="margin-top: 30px;margin-bottom: 50px;">
+
+            <h3>Not Any Files Here</h3>
+            <p>First Upload Files And Start Your Works</p>
+
+        </div>
+        {%endif%}
+        <div class="conatiner my-4" id="frm" style="margin-top: 10px;">
+            <h3 class=" text-center text-dark">File Upload Form</h3>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="file" id="" class="form-control p-2 " style="border-radius: 20px;" required>
+                <br>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success my-2">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

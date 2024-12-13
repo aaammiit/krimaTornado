@@ -1,0 +1,9 @@
+for install django                     - pip install django
+for mysql database                     - pip install mysqlclient
+for create webProject                  - django-admin startproject krimaProject
+for create webApp                      - python manage.py startapp krimaApp
+
+for Apply migrations                   - python manage.py makemigrations
+                                       - python manage.py migrate
+
+for runserver                          - python manage.py runserver
